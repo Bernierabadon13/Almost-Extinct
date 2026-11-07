@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin · ALMOST EXTINCT</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin">
+<main class="wrap">
+  <section id="login" class="login">
+    <h1>Admin sign in</h1>
+    <form id="loginForm">
+      <div class="field"><label for="em">Email</label><input id="em" type="email" required autocomplete="username"></div>
+      <div class="field"><label for="pw">Password</label><input id="pw" type="password" required autocomplete="current-password"></div>
+      <button class="btn" type="submit">Sign in</button>
+      <p class="msg err" id="loginMsg" role="status"></p>
+    </form>
+  </section>
+  <div id="panel" hidden>
+    <header><h1>ALMOST EXTINCT · Admin</h1><div><span class="eyebrow" id="tally"></span> <button class="btn alt sm" id="out">Sign out</button></div></header>
+    <div class="tabs" id="tabs"><button data-t="pending" class="on">Pending</button><button data-t="approved">Approved</button><button data-t="rejected">Rejected</button></div>
+    <p class="flash" id="flash" hidden></p>
+    <div id="list"></div>
+  </div>
+  <dialog id="edit"></dialog>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

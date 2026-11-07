@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ALMOST EXTINCT — A botanical conservation archive</title>
+<meta name="description" content="ALMOST EXTINCT is a community-built archive documenting rare and endangered plants.">
+<meta name="theme-color" content="#2E6B3A">
+<meta property="og:title" content="ALMOST EXTINCT">
+<meta property="og:description" content="A place for the plants we cannot afford to lose.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232E6B3A'/%3E%3Cpath d='M16 6c6 4 8 10 0 20C8 16 10 10 16 6z' fill='%23A9D8A2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="home" class="hero">
+  <div class="ph" id="heroPh"><span>Hero photograph<br>plants, full-bleed</span></div>
+  <div class="wrap hero-in">
+    <h1>Almost<br>Extinct</h1>
+    <p>A quiet archive devoted to protecting and documenting the world’s rarest plants, one species at a time.</p>
+  </div>
+</header>
+
+<section class="wrap intro">
+  <div>
+    <p class="eyebrow">About the archive</p>
+    <h2>A place for the plants we cannot afford to lose.</h2>
+    <p class="lead">ALMOST EXTINCT is a community-built record of endangered plants: where they live, how many remain, and why they matter. Every entry is reviewed before it is published.</p>
+    <div class="stat"><b id="statCount">0</b><span>Documented plants</span></div>
+  </div>
+  <div class="ph" id="introPh"><span>Supporting photograph</span></div>
+</section>
+
+<section class="wrap" id="featured">
+  <p class="eyebrow">Featured</p>
+  <h2>Three to know</h2>
+  <div class="feat" id="feat"></div>
+</section>
+
+<section class="soft" id="explore">
+  <div class="wrap">
+    <p class="eyebrow">Explore the collection</p>
+    <h2>The archive</h2>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search common or scientific name" aria-label="Search plants">
+      <select id="fs" aria-label="Conservation status"></select>
+      <select id="fl" aria-label="Location"></select>
+    </div>
+    <p class="eyebrow" id="result"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="wrap" id="why">
+  <div class="why">
+    <div>
+      <p class="eyebrow">Why it matters</p>
+      <h2>Every species has a story worth keeping.</h2>
+      <p class="lead">A plant that is never recorded is easy to forget, and a forgotten plant is hard to protect. Documentation is the first small act of conservation.</p>
+      <div class="facts">
+        <div><b>1 in 5</b><span>plant species is estimated to be threatened with extinction.</span></div>
+        <div><b>50</b><span>plants, the size of this carefully kept collection.</span></div>
+        <div><b>100%</b><span>of entries reviewed by an administrator.</span></div>
+      </div>
+    </div>
+    <div class="ph" id="whyPh"><span>Supporting photograph</span></div>
+  </div>
+</section>
+
+<section class="soft" id="contribute">
+  <div class="wrap contrib">
+    <div>
+      <p class="eyebrow">Contribute</p>
+      <h2>Know a plant that deserves to be remembered?</h2>
+      <ol class="steps">
+        <li>Submit the plant’s details and a photograph.</li>
+        <li>An administrator reviews every submission.</li>
+        <li>Only approved entries appear publicly.</li>
+      </ol>
+      <div class="count"><span id="cc">0</span> / 50</div>
+      <p class="msg" id="slotMsg"></p>
+      <button class="btn" id="openForm">Submit a plant</button>
+    </div>
+    <div id="formBox" hidden>
+      <form id="form">
+        <div class="field"><label for="fn">Common name</label><input id="fn" required minlength="2" maxlength="120"></div>
+        <div class="field"><label for="fs2">Scientific name</label><input id="fs2" maxlength="160"></div>
+        <div class="field"><label for="fst">Conservation status</label><select id="fst"><option>Critically Endangered</option><option selected>Endangered</option><option>Vulnerable</option><option>Near Threatened</option><option>Extinct in the Wild</option></select></div>
+        <div class="field"><label for="floc">Location</label><input id="floc" required minlength="2" maxlength="160" placeholder="Country or region"></div>
+        <div class="field"><label for="fpop">Estimated population</label><input id="fpop" maxlength="120" placeholder="If known"></div>
+        <div class="field"><label for="fd">Notes</label><textarea id="fd" rows="3" maxlength="1500"></textarea></div>
+        <div class="field"><label for="fp">Photograph (JPG, PNG or WebP)</label><input id="fp" type="file" accept="image/jpeg,image/png,image/webp" required></div>
+        <div class="field"><label for="fyn">Your name (optional)</label><input id="fyn" maxlength="120" autocomplete="name"></div>
+        <div class="field"><label for="fem">Your email (private, optional)</label><input id="fem" type="email" maxlength="200" autocomplete="email"></div>
+        <div class="hp" aria-hidden="true"><input id="website" tabindex="-1" autocomplete="off"></div>
+        <button class="btn" id="send" type="submit">Send for review</button>
+        <p class="msg" id="sent" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-label="Closing statement">
+  <p>"IF THEY WENT EXTINCT, WE ARE TOO SO LET'S SAVE EACH OTHER"</p>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><div class="word">ALMOST EXTINCT</div><p>A minimal, community driven archive of rare and endangered plants.</p></div>
+    </div>
+    <div class="copy">© 2026 All rights reserved.</div>
+  </div>
+</footer>
+
+
+<nav aria-label="Primary">
+  <a href="#home" class="on">Home</a><a href="#explore">Explore</a><a href="#contribute">Contribute</a><a href="#why">About</a>
+</nav>
+
+<dialog id="dlg"></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="script.js" defer></script>
+</body>
+</html>

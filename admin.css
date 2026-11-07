@@ -1,0 +1,18 @@
+body.admin{padding-bottom:var(--s5)}
+.admin header{display:flex;justify-content:space-between;align-items:center;gap:var(--s2);flex-wrap:wrap;padding-block:var(--s3);border-bottom:1px solid var(--line)}
+.admin h1{font-size:1.8rem}
+.login{max-width:380px;margin:12vh auto}
+.tabs{display:flex;gap:var(--s3);margin:var(--s3) 0}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:.4rem 0;font:500 .78rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.tabs button.on{color:var(--deep);border-bottom-color:var(--green)}
+.row{display:grid;grid-template-columns:96px 1fr;gap:var(--s2) var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.row .th{aspect-ratio:1/1}
+.row h3{font-size:1.4rem}.row p{margin:.2rem 0;font-size:.9rem}.small{color:var(--muted);font-size:.78rem!important}
+.acts{grid-column:1/-1;display:flex;gap:var(--s1);flex-wrap:wrap}
+.btn.alt{background:none;border:1px solid var(--deep);color:var(--deep);padding:.6rem 1.1rem}
+.btn.alt:hover{background:var(--deep);color:#fff}
+.btn.danger{background:none;border:1px solid #9B2C2C;color:#9B2C2C;padding:.6rem 1.1rem}
+.btn.danger:hover{background:#9B2C2C;color:#fff}
+.btn.sm{padding:.6rem 1.1rem}
+.flash{padding:.8rem 1rem;background:var(--soft);margin:var(--s2) 0}
+@media(min-width:760px){.row{grid-template-columns:120px 1fr auto}.acts{grid-column:auto;flex-direction:column;align-items:stretch}}

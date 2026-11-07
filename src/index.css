@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #2D371D;
+  --color-forest-light: #3D4A2E;
+  --color-forest-mid: #4A5A38;
+  --color-accent: #D2DB76;
+  --color-accent-dark: #B8C45A;
+  --color-cream: #F5F0E8;
+  --color-sage: #8A9A6B;
+  --color-sage-light: #A8B885;
+  --color-neutral: #6B7355;
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-forest);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Safe area for fixed bottom nav */
+.pb-nav {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #2D371D;
+}
+::-webkit-scrollbar-thumb {
+  background: #4A5A38;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D2DB76;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth image loading */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* Focus styles */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #D2DB76;
+  outline-offset: 2px;
+}
