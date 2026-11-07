@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ALMOST EXTINCT: setup and deployment
 
 Static site (HTML/CSS/JS) + Supabase (database, photo storage, admin login). Hosts free on Vercel.
@@ -28,3 +29,7 @@ Push this folder to GitHub and import it in Vercel (or drag the folder into verc
 - Spam: a hidden honeypot field, a 100-entry pending limit and a 3 MB image limit are built in. For heavier traffic add Cloudflare Turnstile.
 - Supabase free projects pause after a week of inactivity; visit or upgrade to keep it live.
 - Rejected entries keep their photos until you Delete them in the admin.
+=======
+# Almost-Extinct
+A place to put endangered plants
+>>>>>>> 100875d0b65120552e94853ece63ef054867d393
