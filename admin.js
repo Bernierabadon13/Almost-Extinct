@@ -5,7 +5,7 @@ function $(i) { return document.getElementById(i); }
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 if (!(C.SUPABASE_URL && C.SUPABASE_ANON_KEY && window.supabase)) { $("loginMsg").textContent = "Add your Supabase URL and anon key to config.js first."; return; }
 var sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY), rows = [], tab = "pending";
-var STATUS = ["Critically Endangered", "Endangered", "Vulnerable", "Near Threatened", "Extinct in the Wild"];
+var STATUS = ["Critically Endangered", "Endangered", "Vulnerable", "Near Threatened", "Least Concern", "Extinct in the Wild", "Extinct", "Data Deficient", "Not Evaluated"];
 
 function flash(t) { var f = $("flash"); f.textContent = t; f.hidden = !t; }
 function show(on) { $("login").hidden = on; $("panel").hidden = !on; }

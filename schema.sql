@@ -10,7 +10,7 @@ create table public.plants (
   id uuid primary key default gen_random_uuid(),
   common_name text not null check (char_length(common_name) between 2 and 120),
   scientific_name text check (char_length(scientific_name) <= 160),
-  status text not null default 'Endangered' check (status in ('Extinct in the Wild','Critically Endangered','Endangered','Vulnerable','Near Threatened')),
+  status text not null default 'Endangered' check (status in ('Critically Endangered','Endangered','Vulnerable','Near Threatened','Least Concern','Extinct in the Wild','Extinct','Data Deficient','Not Evaluated')),
   location text not null check (char_length(location) between 2 and 160),
   population text check (char_length(population) <= 120),
   description text check (char_length(description) <= 1500),

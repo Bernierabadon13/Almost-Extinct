@@ -112,15 +112,15 @@
     </div>
     <div id="formBox" hidden>
       <form id="form">
-        <div class="field"><label for="fn">Common name</label><input id="fn" required minlength="2" maxlength="120"></div>
-        <div class="field"><label for="fs2">Scientific name</label><input id="fs2" maxlength="160"></div>
-        <div class="field"><label for="fst">Conservation status</label><select id="fst"><option>Critically Endangered</option><option selected>Endangered</option><option>Vulnerable</option><option>Near Threatened</option><option>Extinct in the Wild</option></select></div>
-        <div class="field"><label for="floc">Location</label><input id="floc" required minlength="2" maxlength="160" placeholder="Country or region"></div>
-        <div class="field"><label for="fpop">Estimated population</label><input id="fpop" maxlength="120" placeholder="If known"></div>
-        <div class="field"><label for="fd">Notes</label><textarea id="fd" rows="3" maxlength="1500"></textarea></div>
-        <div class="field"><label for="fp">Photograph (JPG, PNG or WebP)</label><input id="fp" type="file" accept="image/jpeg,image/png,image/webp" required></div>
-        <div class="field"><label for="fyn">Your name (optional, credited if featured)</label><input id="fyn" maxlength="120" autocomplete="name"></div>
-        <div class="field"><label for="fem">Your email (private, optional)</label><input id="fem" type="email" maxlength="200" autocomplete="email"></div>
+        <div class="field"><label for="fn">Common name</label><input id="fn" required minlength="2" maxlength="120" placeholder="e.g. Waling-waling"></div>
+        <div class="field"><label for="fs2">Scientific name (optional)</label><input id="fs2" maxlength="160" placeholder="e.g. Vanda sanderiana"><p class="hint">Not sure? Leave it blank.</p></div>
+        <div class="field"><label for="fst">Conservation status (IUCN Red List)</label><select id="fst" required></select><p class="hint" id="stHelp"></p><p class="hint">Not sure which one? Look the plant up at <a href="https://www.iucnredlist.org" target="_blank" rel="noopener">iucnredlist.org</a>, or choose Data Deficient or Not Evaluated.</p></div>
+        <div class="field"><label for="floc">Where it grows</label><input id="floc" required minlength="2" maxlength="160" placeholder="e.g. Mindanao, Philippines"></div>
+        <div class="field"><label for="fpop">Estimated population (optional)</label><input id="fpop" maxlength="120" placeholder="e.g. About 100 mature plants"></div>
+        <div class="field"><label for="fd">Notes (optional)</label><textarea id="fd" rows="3" maxlength="1500" placeholder="e.g. Grows on tall trees in lowland forest. Threatened by illegal collection."></textarea></div>
+        <div class="field"><label for="fp">Photograph (JPG, PNG or WebP)</label><input id="fp" type="file" accept="image/jpeg,image/png,image/webp" required><p class="hint">A clear, well-lit photo of the whole plant or its flower works best.</p></div>
+        <div class="field"><label for="fyn">Your name (optional)</label><input id="fyn" maxlength="120" autocomplete="name" placeholder="e.g. Bernie"><p class="hint">If your plant is approved, your name is credited in the Featured section and in a thank-you pop-up. Leave it blank to stay anonymous.</p></div>
+        <div class="field"><label for="fem">Your email (optional)</label><input id="fem" type="email" maxlength="200" autocomplete="email" placeholder="e.g. you@example.com"><p class="hint">Private. Never shown on the site.</p></div>
         <div class="hp" aria-hidden="true"><input id="website" tabindex="-1" autocomplete="off"></div>
         <button class="btn" id="send" type="submit">Send for review</button>
         <p class="msg" id="sent" role="status"></p>

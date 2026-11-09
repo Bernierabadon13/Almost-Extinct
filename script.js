@@ -10,6 +10,29 @@ function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function
 
 document.documentElement.classList.add("js");
 
+/* IUCN Red List categories in the official order, with rough population guides (mature plants in the wild) */
+var IUCN = [
+ {n:"Critically Endangered", c:"CR", num:"< 250", help:"Extremely high risk of extinction in the wild. Roughly fewer than 250 mature plants remain."},
+ {n:"Endangered", c:"EN", num:"< 2,500", help:"Very high risk of extinction in the wild. Roughly fewer than 2,500 mature plants remain."},
+ {n:"Vulnerable", c:"VU", num:"< 10,000", help:"High risk of extinction in the wild. Roughly fewer than 10,000 mature plants remain."},
+ {n:"Near Threatened", c:"NT", num:"near 10,000", help:"Not threatened yet, but close to qualifying as Vulnerable (around 10,000 mature plants, or declining)."},
+ {n:"Least Concern", c:"LC", num:"> 10,000", help:"Widespread and plentiful. Usually more than 10,000 mature plants."},
+ {n:"Extinct in the Wild", c:"EW", num:"0 in the wild", help:"None are left in nature. It survives only in gardens, nurseries or seed banks."},
+ {n:"Extinct", c:"EX", num:"0 left", help:"No living plants are known to remain anywhere."},
+ {n:"Data Deficient", c:"DD", num:"unknown", help:"There is not enough information to tell how many remain."},
+ {n:"Not Evaluated", c:"NE", num:"not assessed", help:"The IUCN has not assessed this plant yet."}
+];
+function sLabel(name) { for (var i = 0; i < IUCN.length; i++) if (IUCN[i].n === name) return name + " (" + IUCN[i].c + ")"; return name || ""; }
+function sRank(name) { for (var i = 0; i < IUCN.length; i++) if (IUCN[i].n === name) return i; return 99; }
+(function buildStatus() {
+  var sel = $("fst"), dflt = "Pick the closest match. The numbers are rough guides for mature plants in the wild.";
+  sel.innerHTML = '<option value="" disabled selected>Choose a status</option>' + IUCN.map(function (x) { return '<option value="' + esc(x.n) + '">' + esc(x.n + " (" + x.c + ") · " + x.num) + '</option>'; }).join("");
+  function help() { var x = IUCN.filter(function (y) { return y.n === sel.value; })[0]; $("stHelp").textContent = x ? x.help : dflt; }
+  sel.addEventListener("change", help);
+  $("form").addEventListener("reset", function () { setTimeout(help, 0); });
+  help();
+})();
+
 /* opening animation (the animation itself runs in CSS; this only locks scrolling until it ends) */
 var intro = $("intro");
 if (intro) {
@@ -154,7 +177,7 @@ function render() {
   $("result").textContent = plants.length ? r.length + " of " + plants.length + " shown" : "";
   var g = $("grid");
   g.innerHTML = r.length ? r.map(function (p) {
-    return '<article class="card">' + fig(p) + '<h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><div class="meta"><span class="tag">' + esc(p.status) + '</span><span>' + esc(p.location) + '</span></div><button data-id="' + esc(p.id) + '">View full details</button></article>';
+    return '<article class="card">' + fig(p) + '<h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><div class="meta"><span class="tag">' + esc(sLabel(p.status)) + '</span><span>' + esc(p.location) + '</span></div><button data-id="' + esc(p.id) + '">View full details</button></article>';
   }).join("") : '<p class="empty">' + (plants.length ? "No plants match your search." : "The archive is just beginning. Be the first to contribute.") + '</p>';
   [].forEach.call(g.children, function (el, i) {
     if (firstRender) { el.classList.add("rv"); el.style.setProperty("--d", (i % 4) * 70 + "ms"); }
@@ -167,7 +190,7 @@ function render() {
 $("grid").addEventListener("click", function (e) {
   var id = e.target.getAttribute("data-id"); if (!id) return;
   var p = plants.filter(function (x) { return x.id === id; })[0]; if (!p) return;
-  $("dlg").innerHTML = fig(p) + '<div class="dlg"><h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><dl><dt>Status</dt><dd>' + esc(p.status) + '</dd><dt>Location</dt><dd>' + esc(p.location) + '</dd><dt>Population</dt><dd>' + esc(p.population || "Unknown") + '</dd></dl><p>' + esc(p.description) + '</p><button class="btn" id="x">Close</button></div>';
+  $("dlg").innerHTML = fig(p) + '<div class="dlg"><h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><dl><dt>Status</dt><dd>' + esc(sLabel(p.status)) + '</dd><dt>Location</dt><dd>' + esc(p.location) + '</dd><dt>Population</dt><dd>' + esc(p.population || "Unknown") + '</dd></dl><p>' + esc(p.description) + '</p><button class="btn" id="x">Close</button></div>';
   $("dlg").showModal(); $("x").onclick = function () { $("dlg").close(); };
 });
 $("dlg").addEventListener("click", function (e) { if (e.target === this) this.close(); });
@@ -250,7 +273,7 @@ fit(); addEventListener("resize", fit);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 
 load().then(function () {
-  opts($("fs"), "All statuses", uniq("status")); opts($("fl"), "All locations", uniq("location"));
+  $("fs").innerHTML = '<option value="">All statuses</option>' + uniq("status").sort(function (a, b) { return sRank(a) - sRank(b); }).map(function (v) { return '<option value="' + esc(v) + '">' + esc(sLabel(v)) + '</option>'; }).join(""); opts($("fl"), "All locations", uniq("location"));
   renderFeatured(); render(); slots(); thankContributors();
 });
 })();
