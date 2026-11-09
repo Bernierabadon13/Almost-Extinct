@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ALMOST EXTINCT — A botanical conservation archive</title>
 <meta name="description" content="ALMOST EXTINCT is a community-built archive documenting rare and endangered plants.">
-<meta name="theme-color" content="#2E6B3A">
+<meta name="theme-color" content="#FFFFFF">
 <meta property="og:title" content="ALMOST EXTINCT">
 <meta property="og:description" content="A place for the plants we cannot afford to lose.">
 <meta property="og:type" content="website">
@@ -17,28 +17,53 @@
 </head>
 <body>
 
+<!-- Opening animation: a one-month sprout folds into a seed, then the page opens -->
+<div class="intro-screen" id="intro" aria-hidden="true">
+  <svg class="seedling" viewBox="0 0 120 120" focusable="false">
+    <path class="soil" d="M44 101 Q60 96 76 101 Z"/>
+    <g class="plant">
+      <path class="stem" d="M58.5 100 C58.8 82 59 66 59 50 L61 50 C61 66 61.2 82 61.5 100 Z"/>
+      <path class="leaf l1" d="M60 52 C48 52 36 44 32 30 C46 28 58 36 60 52 Z"/>
+      <path class="leaf l2" d="M60 52 C72 52 84 44 88 30 C74 28 62 36 60 52 Z"/>
+      <path class="leaf l3" d="M59 74 C52 74 45 70 42 62 C50 61 57 66 59 74 Z"/>
+      <path class="leaf l4" d="M61 74 C68 74 75 70 78 62 C70 61 63 66 61 74 Z"/>
+    </g>
+    <g transform="rotate(-14 60 60)"><path class="seed" d="M60 44 C70 54 72 66 60 76 C48 66 50 54 60 44 Z"/></g>
+  </svg>
+</div>
+
 <header id="home" class="hero">
   <div class="ph" id="heroPh"><span>Hero photograph<br>plants, full-bleed</span></div>
+  <div class="pops" id="pops" aria-live="polite"></div>
   <div class="wrap hero-in">
     <h1>Almost<br>Extinct</h1>
-    <p>A quiet archive devoted to protecting and documenting the world’s rarest plants, one species at a time.</p>
+    <div class="hero-side">
+      <p>A quiet archive devoted to protecting and documenting the world’s rarest plants, one species at a time.</p>
+      <a class="btn" id="heroCta" href="#contribute">Contribute now</a>
+    </div>
   </div>
 </header>
 
 <section class="wrap intro">
-  <div>
+  <div class="rv">
     <p class="eyebrow">About the archive</p>
     <h2>A place for the plants we cannot afford to lose.</h2>
     <p class="lead">ALMOST EXTINCT is a community-built record of endangered plants: where they live, how many remain, and why they matter. Every entry is reviewed before it is published.</p>
-    <div class="stat"><b id="statCount">0</b><span>Documented plants</span></div>
   </div>
-  <div class="ph" id="introPh"><span>Supporting photograph</span></div>
+  <div class="ph rv" id="introPh"><span>Supporting photograph</span></div>
 </section>
 
 <section class="wrap" id="featured">
-  <p class="eyebrow">Featured</p>
-  <h2>Three to know</h2>
-  <div class="feat" id="feat"></div>
+  <p class="eyebrow rv">Featured</p>
+  <h2 class="rv">Three to know</h2>
+  <div class="carousel rv" id="car" role="region" aria-roledescription="carousel" aria-label="Featured plants">
+    <div class="track" id="feat"></div>
+    <div class="dots" id="dots"></div>
+  </div>
+</section>
+
+<section class="wrap statband">
+  <div class="stat rv"><b id="statCount">0</b><span>Documented plants</span></div>
 </section>
 
 <section class="soft" id="explore">
@@ -57,7 +82,7 @@
 
 <section class="wrap" id="why">
   <div class="why">
-    <div>
+    <div class="rv">
       <p class="eyebrow">Why it matters</p>
       <h2>Every species has a story worth keeping.</h2>
       <p class="lead">A plant that is never recorded is easy to forget, and a forgotten plant is hard to protect. Documentation is the first small act of conservation.</p>
@@ -67,13 +92,13 @@
         <div><b>100%</b><span>of entries reviewed by an administrator.</span></div>
       </div>
     </div>
-    <div class="ph" id="whyPh"><span>Supporting photograph</span></div>
+    <div class="ph rv" id="whyPh"><span>Supporting photograph</span></div>
   </div>
 </section>
 
 <section class="soft" id="contribute">
   <div class="wrap contrib">
-    <div>
+    <div class="rv">
       <p class="eyebrow">Contribute</p>
       <h2>Know a plant that deserves to be remembered?</h2>
       <ol class="steps">
@@ -94,7 +119,7 @@
         <div class="field"><label for="fpop">Estimated population</label><input id="fpop" maxlength="120" placeholder="If known"></div>
         <div class="field"><label for="fd">Notes</label><textarea id="fd" rows="3" maxlength="1500"></textarea></div>
         <div class="field"><label for="fp">Photograph (JPG, PNG or WebP)</label><input id="fp" type="file" accept="image/jpeg,image/png,image/webp" required></div>
-        <div class="field"><label for="fyn">Your name (optional)</label><input id="fyn" maxlength="120" autocomplete="name"></div>
+        <div class="field"><label for="fyn">Your name (optional, credited if featured)</label><input id="fyn" maxlength="120" autocomplete="name"></div>
         <div class="field"><label for="fem">Your email (private, optional)</label><input id="fem" type="email" maxlength="200" autocomplete="email"></div>
         <div class="hp" aria-hidden="true"><input id="website" tabindex="-1" autocomplete="off"></div>
         <button class="btn" id="send" type="submit">Send for review</button>
@@ -105,7 +130,7 @@
 </section>
 
 <section class="closing" aria-label="Closing statement">
-  <p>"IF THEY WENT EXTINCT, WE ARE TOO SO LET'S SAVE EACH OTHER"</p>
+  <p class="rv">"IF THEY WENT EXTINCT, WE ARE TOO SO LET'S SAVE EACH OTHER"</p>
 </section>
 
 <footer>

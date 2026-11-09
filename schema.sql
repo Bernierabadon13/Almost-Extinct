@@ -57,7 +57,7 @@ create policy "admin full access" on public.plants for all to authenticated
 
 
 create view public.public_plants as
-  select id, common_name, scientific_name, status, location, population, description, image_path, approved_at
+  select id, common_name, scientific_name, status, location, population, description, image_path, approved_at, submitter_name
   from public.plants where state = 'approved';
 grant select on public.public_plants to anon, authenticated;
 grant execute on function public.can_submit(), public.collection_count(), public.is_admin() to anon, authenticated;

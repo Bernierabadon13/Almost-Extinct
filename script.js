@@ -3,9 +3,31 @@
 var C = window.AE_CONFIG || {}, MAX = 50;
 var LIVE = !!(C.SUPABASE_URL && C.SUPABASE_ANON_KEY && window.supabase);
 var sb = LIVE ? window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY) : null;
-var plants = [], canSubmit = true;
+var plants = [], canSubmit = true, firstRender = true;
+var RM = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 function $(i) { return document.getElementById(i); }
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+document.documentElement.classList.add("js");
+
+/* opening animation (the animation itself runs in CSS; this only locks scrolling until it ends) */
+var intro = $("intro");
+if (intro) {
+  if (RM) { intro.remove(); }
+  else {
+    document.body.classList.add("lock");
+    setTimeout(function () { document.body.classList.remove("lock"); intro.remove(); }, 4300);
+  }
+}
+
+/* scroll reveal */
+var rvIO = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+  es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); rvIO.unobserve(en.target); } });
+}, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }) : null;
+function reveal(root) {
+  [].forEach.call((root || document).querySelectorAll(".rv:not(.in)"), function (el) { if (rvIO) rvIO.observe(el); else el.classList.add("in"); });
+}
+reveal();
 
 /* Demo data, shown only until Supabase is configured in config.js */
 var MOCK = [
@@ -46,20 +68,100 @@ async function load() {
 function opts(sel, label, vals) { sel.innerHTML = '<option value="">' + label + '</option>' + vals.map(function (v) { return '<option>' + esc(v) + '</option>'; }).join(""); }
 function uniq(k) { return plants.map(function (p) { return p[k]; }).filter(function (v, i, a) { return v && a.indexOf(v) === i; }); }
 
+/* ---------- featured carousel: photo + contributor only, no plant name ---------- */
+var carTimer = null;
 function renderFeatured() {
-  var f = plants.slice().sort(function (a, b) { return !!b.image_path - !!a.image_path; }).slice(0, 3);
+  var f = plants.filter(function (p) { return p.image_path; }).slice(0, 3);
   $("featured").hidden = !f.length;
   $("feat").innerHTML = f.map(function (p) {
-    return '<article class="fp">' + fig(p) + '<h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><div class="meta"><span class="tag">' + esc(p.status) + '</span><span>' + esc(p.population) + '</span></div></article>';
+    var who = String(p.submitter_name || "").trim() || "Anonymous";
+    return '<figure class="slide"><div class="ph"><img decoding="async" alt="Featured plant photograph" src="' + esc(imgUrl(p)) + '"><span>Photograph</span></div><figcaption class="by">Contributor: ' + esc(who) + '</figcaption></figure>';
   }).join("");
+  $("dots").innerHTML = f.length > 1 ? f.map(function (p, i) { return '<button type="button" aria-label="Show photo ' + (i + 1) + '"' + (i === 0 ? ' class="on"' : '') + '></button>'; }).join("") : "";
+  startCarousel(f.length);
 }
+function startCarousel(n) {
+  var tr = $("feat"), dots = $("dots").children, i = 0, busyUntil = 0, hold = false, resume = 0;
+  if (carTimer) { clearInterval(carTimer); carTimer = null; }
+  if (n < 2) return;
+  function mark(k) { i = k; [].forEach.call(dots, function (d, j) { d.classList.toggle("on", j === k); }); }
+  function go(k) {
+    k = (k + n) % n; busyUntil = Date.now() + 800; mark(k);
+    tr.scrollTo({ left: k * tr.clientWidth, behavior: RM ? "auto" : "smooth" });
+  }
+  function pause(ms) { hold = true; clearTimeout(resume); resume = setTimeout(function () { hold = false; }, ms); }
+  tr.addEventListener("scroll", function () {
+    if (Date.now() < busyUntil) return;
+    var k = Math.round(tr.scrollLeft / tr.clientWidth); if (k !== i) mark(k);
+  }, { passive: true });
+  [].forEach.call(dots, function (d, j) { d.addEventListener("click", function () { go(j); pause(7000); }); });
+  var box = $("car");
+  box.addEventListener("pointerdown", function () { pause(7000); });
+  box.addEventListener("mouseenter", function () { clearTimeout(resume); hold = true; });
+  box.addEventListener("mouseleave", function () { hold = false; });
+  box.addEventListener("focusin", function () { clearTimeout(resume); hold = true; });
+  box.addEventListener("focusout", function () { hold = false; });
+  addEventListener("resize", function () { tr.scrollTo({ left: i * tr.clientWidth, behavior: "auto" }); });
+  if (!RM) carTimer = setInterval(function () { if (!hold && !document.hidden) go(i + 1); }, 4500);
+}
+
+/* ---------- contributor thank-you pop-ups ----------
+   Every contributor who typed a name gets their own glass pop-up at a random spot on the first
+   page. They appear one after another, stay about 5 seconds, then fade out. */
+function thankContributors() {
+  var hero = $("home"), layer = $("pops"); if (!hero || !layer) return;
+  var seen = {}, names = [];
+  plants.forEach(function (p) {
+    var n = String(p.submitter_name || "").trim(), k = n.toLowerCase();
+    if (n && !seen[k]) { seen[k] = 1; names.push(n); }
+  });
+  if (!names.length) return;
+  for (var j = names.length - 1; j > 0; j--) { var r = Math.floor(Math.random() * (j + 1)), t = names[j]; names[j] = names[r]; names[r] = t; }
+  names = names.slice(0, window.innerWidth < 600 ? 3 : 6);
+
+  var placed = [], start = RM ? 600 : Math.max(0, 4500 - performance.now()), delay = start;
+  names.forEach(function (name) {
+    delay += 700 + Math.random() * 1100;
+    setTimeout(function () { popOne(name); }, delay);
+  });
+  function popOne(name) {
+    var el = document.createElement("div"); el.className = "pop-note";
+    el.innerHTML = '<span class="toast-ic" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3c5 3.4 6.6 8.4 0 18-6.6-9.6-5-14.6 0-18z"/></svg></span><div class="toast-tx"><p><b></b> is one of our contributors</p><small>Thank you for helping protect rare plants.</small></div>';
+    el.querySelector("b").textContent = name;
+    layer.appendChild(el);
+    var W = layer.clientWidth, H = layer.clientHeight, w = el.offsetWidth, h = el.offsetHeight;
+    var low = hero.querySelector(".hero-in"), reserve = low ? low.offsetHeight + 20 : 260;   /* keep clear of the title and buttons */
+    var top0 = 70, top1 = Math.max(top0, H - reserve - h), x = 0, y = top0, ok = false;
+    for (var tries = 0; tries < 30 && !ok; tries++) {
+      x = 12 + Math.random() * Math.max(0, W - w - 24); y = top0 + Math.random() * (top1 - top0);
+      ok = placed.every(function (q) { return x + w + 10 < q.x || q.x + q.w + 10 < x || y + h + 10 < q.y || q.y + q.h + 10 < y; });
+    }
+    if (!ok) { el.remove(); return; }
+    var spot = { x: x, y: y, w: w, h: h }; placed.push(spot);
+    el.style.left = x + "px"; el.style.top = y + "px";
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("show"); }); });
+    setTimeout(function () {
+      el.classList.remove("show");
+      setTimeout(function () { el.remove(); placed.splice(placed.indexOf(spot), 1); }, 800);
+    }, 5000);
+  }
+}
+
+/* ---------- archive grid ---------- */
 function render() {
   var q = $("q").value.trim().toLowerCase(), s = $("fs").value, l = $("fl").value;
   var r = plants.filter(function (p) { return (!q || ((p.common_name || "") + " " + (p.scientific_name || "")).toLowerCase().indexOf(q) > -1) && (!s || p.status === s) && (!l || p.location === l); });
   $("result").textContent = plants.length ? r.length + " of " + plants.length + " shown" : "";
-  $("grid").innerHTML = r.length ? r.map(function (p) {
+  var g = $("grid");
+  g.innerHTML = r.length ? r.map(function (p) {
     return '<article class="card">' + fig(p) + '<h3>' + esc(p.common_name) + '</h3><p class="sci">' + esc(p.scientific_name) + '</p><div class="meta"><span class="tag">' + esc(p.status) + '</span><span>' + esc(p.location) + '</span></div><button data-id="' + esc(p.id) + '">View full details</button></article>';
   }).join("") : '<p class="empty">' + (plants.length ? "No plants match your search." : "The archive is just beginning. Be the first to contribute.") + '</p>';
+  [].forEach.call(g.children, function (el, i) {
+    if (firstRender) { el.classList.add("rv"); el.style.setProperty("--d", (i % 4) * 70 + "ms"); }
+    else el.classList.add("pop");
+  });
+  if (firstRender) reveal(g);
+  firstRender = false;
 }
 ["q", "fs", "fl"].forEach(function (i) { $(i).addEventListener("input", render); });
 $("grid").addEventListener("click", function (e) {
@@ -70,24 +172,39 @@ $("grid").addEventListener("click", function (e) {
 });
 $("dlg").addEventListener("click", function (e) { if (e.target === this) this.close(); });
 
+/* ---------- counts ---------- */
+function countUp(el, n) {
+  if (RM || n < 1) { el.textContent = n; return; }
+  var t0;
+  function step(t) { t0 = t0 || t; var p = Math.min(1, (t - t0) / 900); el.textContent = Math.round(n * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
 function slots() {
   var n = plants.length, full = n >= MAX;
-  $("cc").textContent = n; $("statCount").textContent = n;
+  $("cc").textContent = n;
+  var sc = $("statCount");
+  if (rvIO && !RM) {
+    var so = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { so.disconnect(); countUp(sc, n); } }, { threshold: 0.6 });
+    so.observe(sc);
+  } else sc.textContent = n;
   $("slotMsg").textContent = full ? "The collection is full. Public submissions are closed." : !canSubmit ? "Submissions are temporarily closed. Please check back soon." : n === MAX - 1 ? "Only one slot remains." : (MAX - n) + " slots remain.";
   $("openForm").disabled = full || !canSubmit;
   if (full || !canSubmit) $("formBox").hidden = true;
 }
 $("openForm").onclick = function () { $("formBox").hidden = false; $("fn").focus(); };
+var hc = $("heroCta");
+if (hc) hc.addEventListener("click", function () { if (!$("openForm").disabled) $("formBox").hidden = false; });
 
+/* ---------- submissions ---------- */
 function shrink(file) {
   return new Promise(function (res, rej) {
     var u = URL.createObjectURL(file), i = new Image();
     i.onload = function () {
       URL.revokeObjectURL(u);
-      var s = Math.min(1, 1600 / Math.max(i.width, i.height)), c = document.createElement("canvas");
+      var s = Math.min(1, 1280 / Math.max(i.width, i.height)), c = document.createElement("canvas");
       c.width = Math.round(i.width * s); c.height = Math.round(i.height * s);
       c.getContext("2d").drawImage(i, 0, 0, c.width, c.height);
-      c.toBlob(function (b) { b ? res(b) : rej(new Error("The photo could not be processed.")); }, "image/jpeg", 0.82);
+      c.toBlob(function (b) { b ? res(b) : rej(new Error("The photo could not be processed.")); }, "image/jpeg", 0.8);
     };
     i.onerror = function () { rej(new Error("That photo could not be read.")); };
     i.src = u;
@@ -134,6 +251,6 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 
 load().then(function () {
   opts($("fs"), "All statuses", uniq("status")); opts($("fl"), "All locations", uniq("location"));
-  renderFeatured(); render(); slots();
+  renderFeatured(); render(); slots(); thankContributors();
 });
 })();
